@@ -1,9 +1,11 @@
+import 'package:gallery_saver/gallery_saver.dart';
 import 'package:get/get.dart';
 import 'package:camera/camera.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:share_plus/share_plus.dart';
+import 'dart:io';
 
 class HomeController extends GetxController {
   late CameraController cameraController;
@@ -22,19 +24,26 @@ class HomeController extends GetxController {
   }
 
   Future<void> initializeCamera() async {
-    final cameras = Get.find<List<CameraDescription>>();
-    if (cameras.isNotEmpty) {
-      cameraController = CameraController(
-        cameras.first,
-        ResolutionPreset.high,
-        enableAudio: true,
-      );
-      try {
+    try {
+      // Safely fetch the list of cameras from GetX
+      final cameras = Get.find<List<CameraDescription>>();
+
+      // Ensure there is at least one camera
+      if (cameras.isNotEmpty) {
+        cameraController = CameraController(
+          cameras.first,
+          ResolutionPreset.high,
+          enableAudio: true,
+        );
         await cameraController.initialize();
         update();
-      } catch (e) {
-        Get.snackbar('Error', 'Failed to initialize camera: $e');
+      } else {
+        // No cameras available, show error message
+        Get.snackbar('Error', 'No cameras available');
       }
+    } catch (e) {
+      // Handle any error that occurs during the camera initialization
+      Get.snackbar('Error', 'Failed to initialize camera: $e');
     }
   }
 
@@ -90,7 +99,10 @@ class HomeController extends GetxController {
         try {
           final XFile video = await cameraController.stopVideoRecording();
           isRecording.value = false;
-          Get.snackbar('Success', 'Video saved to: ${video.path}');
+
+          // Save the recorded video to the gallery
+          await saveVideoToGallery(video.path);
+          Get.snackbar('Success', 'Video saved to gallery: ${video.path}');
         } catch (e) {
           Get.snackbar('Error', 'Failed to stop recording: $e');
         }
@@ -108,6 +120,35 @@ class HomeController extends GetxController {
         'Permission Denied',
         'Camera and microphone permissions are required',
       );
+    }
+  }
+
+  // Function to save video to gallery using path_provider and photo_manager
+  Future<void> saveVideoToGallery(String videoPath) async {
+    try {
+      // Request storage permission
+      var storagePermission = await Permission.storage.request();
+      if (!storagePermission.isGranted) {
+        Get.snackbar('Permission Denied', 'Storage permission is required');
+        return;
+      }
+
+      if (Platform.isAndroid || Platform.isIOS) {
+        final bool? result = await GallerySaver.saveVideo(
+          videoPath,
+          albumName: 'My Videos', // Optional: specify album name
+        );
+
+        if (result == true) {
+          Get.snackbar('Success', 'Video saved to gallery');
+        } else {
+          Get.snackbar('Error', 'Failed to save video to gallery');
+        }
+      } else {
+        Get.snackbar('Error', 'Unsupported platform');
+      }
+    } catch (e) {
+      Get.snackbar('Error', 'Failed to save video: $e');
     }
   }
 }

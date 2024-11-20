@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart'; // Import Firestore
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
@@ -25,6 +26,8 @@ class RegisterController extends GetxController {
     };
 
   final FirebaseAuth _auth = FirebaseAuth.instance;
+  final FirebaseFirestore _firestore =
+      FirebaseFirestore.instance; // Firestore instance
 
   void togglePasswordVisibility() {
     isPasswordVisible.value = !isPasswordVisible.value;
@@ -71,6 +74,15 @@ class RegisterController extends GetxController {
       );
 
       await userCredential.user?.updateDisplayName(name);
+
+      final userDocRef =
+          _firestore.collection('users').doc(userCredential.user?.uid);
+      await userDocRef.set({
+        'name': name,
+        'email': email,
+        'phone': '', // Default empty phone number
+        'profilePicture': '', // Default empty profile picture
+      });
 
       Get.offAll(() => const HomePage());
       Get.snackbar("Success", "Account created successfully!");

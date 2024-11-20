@@ -1,4 +1,3 @@
-// app/views/home_page.dart
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
@@ -13,49 +12,54 @@ class HomePage extends GetView<HomeController> {
     return Scaffold(
       backgroundColor: const Color(0xFFFFE4D0),
       body: SafeArea(
-        child: Padding(
-          padding: EdgeInsets.symmetric(horizontal: 5.w, vertical: 2.h),
-          child: Column(
-            children: [
-              SizedBox(height: 4.h),
-              const Text(
-                'SOS',
-                style: TextStyle(
-                  fontSize: 24,
-                  fontWeight: FontWeight.bold,
+        child: SingleChildScrollView(
+          child: Padding(
+            padding: EdgeInsets.symmetric(horizontal: 5.w, vertical: 2.h),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                SizedBox(height: 4.h),
+                const Text(
+                  'SOS',
+                  style: TextStyle(
+                    fontSize: 24,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
-              ),
-              SizedBox(height: 3.h),
-              Icon(
-                Icons.shield_outlined,
-                size: 15.w,
-                color: Colors.black87,
-              ),
-              SizedBox(height: 5.h),
-              _buildButton(
-                'Call Nearest Police Station',
-                controller.makeEmergencyCall,
-              ),
-              SizedBox(height: 2.h),
-              _buildButton(
-                'Share Live Location',
-                controller.shareLocation,
-              ),
-              SizedBox(height: 2.h),
-              Obx(() => _buildButton(
-                    controller.isRecording.value
-                        ? 'Stop Recording'
-                        : 'Take A Video',
-                    controller.toggleVideoRecording,
-                  )),
-              const Spacer(),
-              BottomNavBar(
-                selectedIndex: 0,
-                onItemTapped: (index) {
-                  // Handle navigation if needed
-                },
-              ),
-            ],
+                SizedBox(
+                  height: 35.h,
+                  child: Container(
+                    height: 30.h,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(12),
+                      image: const DecorationImage(
+                        image: AssetImage('assets/logo.png'),
+                        fit: BoxFit.cover,
+                      ),
+                    ),
+                  ),
+                ),
+                SizedBox(height: 5.h),
+                _buildButton(
+                  'Call Helpline',
+                  controller.makeEmergencyCall,
+                ),
+                SizedBox(height: 2.h),
+                _buildButton(
+                  'Share Live Location',
+                  controller.shareLocation,
+                ),
+                SizedBox(height: 2.h),
+                Obx(() => _buildButton(
+                      controller.isRecording.value
+                          ? 'Stop Recording'
+                          : 'Take A Video',
+                      controller.toggleVideoRecording,
+                    )),
+                SizedBox(height: 3.h),
+                BottomNavBar(),
+              ],
+            ),
           ),
         ),
       ),

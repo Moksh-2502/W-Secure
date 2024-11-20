@@ -4,33 +4,32 @@ import 'package:get/get.dart';
 import '../controllers/navigation_controller.dart';
 
 class BottomNavBar extends GetView<NavigationController> {
-  final dynamic onItemTapped;
-
-  const BottomNavBar(
-      {super.key, required selectedIndex, required this.onItemTapped});
+  const BottomNavBar({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return Obx(() => Container(
-          padding: EdgeInsets.symmetric(vertical: 2.h),
-          decoration: const BoxDecoration(
-            color: Color(0xFFFF4D79),
-            borderRadius: BorderRadius.only(
-              topLeft: Radius.circular(20),
-              topRight: Radius.circular(20),
-            ),
+    return Obx(
+      () => Container(
+        padding: EdgeInsets.symmetric(vertical: 2.h),
+        decoration: const BoxDecoration(
+          color: Color(0xFFFF4D79),
+          borderRadius: BorderRadius.only(
+            topLeft: Radius.circular(20),
+            topRight: Radius.circular(20),
           ),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              _buildNavItem(Icons.coffee_outlined, 0, 'Home'),
-              _buildNavItem(Icons.shield_outlined, 1, 'SOS'),
-              _buildNavItem(Icons.book_outlined, 2, 'Book'),
-              _buildNavItem(Icons.map_outlined, 3, 'Map'),
-              _buildNavItem(Icons.person_outline, 4, 'Profile'),
-            ],
-          ),
-        ));
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            _buildNavItem(Icons.coffee_outlined, 0, 'Home'),
+            _buildNavItem(Icons.shield_outlined, 1, 'SOS'),
+            _buildNavItem(Icons.book_outlined, 2, 'Book'),
+            _buildNavItem(Icons.map_outlined, 3, 'Map'),
+            _buildNavItem(Icons.person_outline, 4, 'Profile'),
+          ],
+        ),
+      ),
+    );
   }
 
   Widget _buildNavItem(IconData icon, int index, String label) {

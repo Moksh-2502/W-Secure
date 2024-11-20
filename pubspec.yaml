@@ -45,6 +45,16 @@ dependencies:
   share_plus: ^10.1.2
   camera: ^0.11.0+2
   permission_handler: ^11.3.1
+  cloud_firestore: ^5.5.0
+  firebase_storage: ^12.3.6
+  image_picker: ^1.1.2
+  firebase_app_check: ^0.3.1+6
+  path_provider: ^2.1.5
+  photo_manager: ^3.6.2
+  gallery_saver: ^2.3.2
+  
+dependency_overrides:
+  http: ^0.13.3
 
 dev_dependencies:
   flutter_test:

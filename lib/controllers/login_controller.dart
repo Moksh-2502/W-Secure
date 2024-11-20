@@ -1,9 +1,12 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 class LoginController extends GetxController {
   final FirebaseAuth _auth = FirebaseAuth.instance;
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
 
@@ -49,6 +52,24 @@ class LoginController extends GetxController {
 
     try {
       isLoading.value = true;
+
+      final userSnapshot = await _firestore
+          .collection('users')
+          .where('email', isEqualTo: email.trim())
+          .get();
+
+      if (userSnapshot.docs.isEmpty) {
+        Get.snackbar(
+          'Error',
+          'User not registered. Please create an account.',
+          snackPosition: SnackPosition.BOTTOM,
+          backgroundColor: Colors.red.withOpacity(0.1),
+          colorText: Colors.white,
+        );
+        Get.toNamed('/register');
+        return;
+      }
+
       UserCredential userCredential = await _auth.signInWithEmailAndPassword(
         email: email.trim(),
         password: password,

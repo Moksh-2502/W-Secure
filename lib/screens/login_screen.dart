@@ -1,26 +1,14 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
-import 'package:security/controllers/social_button_controller.dart';
+import 'package:security/controllers/login_controller.dart';
 import 'package:security/widgets/background_widget.dart';
 
-class LoginPage extends StatefulWidget {
-  const LoginPage({super.key});
+class LoginPage extends StatelessWidget {
+  LoginPage({super.key});
 
-  @override
-  State<LoginPage> createState() => _LoginPageState();
-}
-
-class _LoginPageState extends State<LoginPage> {
-  final _emailController = TextEditingController();
-  final _passwordController = TextEditingController();
-
-  @override
-  void dispose() {
-    _emailController.dispose();
-    _passwordController.dispose();
-    super.dispose();
-  }
+  final LoginController _loginController = Get.find<LoginController>();
 
   @override
   Widget build(BuildContext context) {
@@ -44,14 +32,14 @@ class _LoginPageState extends State<LoginPage> {
               ),
             ),
             _buildTextField(
-              controller: _emailController,
+              controller: _loginController.emailController,
               label: 'Email',
               keyboardType: TextInputType.emailAddress,
             ),
             Padding(
               padding: EdgeInsets.symmetric(vertical: 2.h),
               child: _buildTextField(
-                controller: _passwordController,
+                controller: _loginController.passwordController,
                 label: 'Password',
                 isPassword: true,
               ),
@@ -61,9 +49,7 @@ class _LoginPageState extends State<LoginPage> {
               child: Padding(
                 padding: EdgeInsets.only(bottom: 3.h),
                 child: TextButton(
-                  onPressed: () {
-                    // Handle forgot password
-                  },
+                  onPressed: _loginController.forgotPassword,
                   child: const Text(
                     'Forgot Password?',
                     style: TextStyle(
@@ -73,7 +59,6 @@ class _LoginPageState extends State<LoginPage> {
                 ),
               ),
             ),
-            SocialLoginButtons(isSmallScreen: isSmallScreen),
             Padding(
               padding: EdgeInsets.symmetric(vertical: 3.h),
               child: Row(
@@ -82,43 +67,51 @@ class _LoginPageState extends State<LoginPage> {
                   Text.rich(
                     TextSpan(
                       text: 'New Here? ',
-                      style: TextStyle(color: Color(0xFFFFECD0)),
+                      style: const TextStyle(color: Color(0xFFFFECD0)),
                       children: [
                         TextSpan(
                           text: 'Register',
-                          style: TextStyle(
+                          style: const TextStyle(
                             color: Color(0xFFFFECD0),
                             fontWeight: FontWeight.bold,
                             decoration: TextDecoration.underline,
                           ),
                           recognizer: TapGestureRecognizer()
                             ..onTap = () {
-                              Navigator.pushNamed(context, '/register');
+                              Get.toNamed('/register');
                             },
                         ),
                       ],
                     ),
                   ),
-                  ElevatedButton(
-                    onPressed: () {
-                      // Handle login
-                    },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color(0xFFFFF5E9),
-                      foregroundColor: Colors.black87,
-                      padding: EdgeInsets.symmetric(
-                        horizontal: isSmallScreen ? 6.w : 8.w,
-                        vertical: 2.h,
+                  Obx(() {
+                    return ElevatedButton(
+                      onPressed: _loginController.isLoading.value
+                          ? null
+                          : () async {
+                              await _loginController.login();
+                            },
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: const Color(0xFFFFF5E9),
+                        foregroundColor: Colors.black87,
+                        padding: EdgeInsets.symmetric(
+                          horizontal: isSmallScreen ? 6.w : 8.w,
+                          vertical: 2.h,
+                        ),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(8),
+                        ),
                       ),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                    ),
-                    child: const Text(
-                      'Login',
-                      style: TextStyle(fontSize: 16),
-                    ),
-                  ),
+                      child: _loginController.isLoading.value
+                          ? const CircularProgressIndicator(
+                              color: Colors.black87,
+                            )
+                          : const Text(
+                              'Login',
+                              style: TextStyle(fontSize: 16),
+                            ),
+                    );
+                  }),
                 ],
               ),
             ),
@@ -141,7 +134,7 @@ class _LoginPageState extends State<LoginPage> {
       ),
       child: TextField(
         controller: controller,
-        obscureText: isPassword,
+        obscureText: isPassword && !_loginController.isPasswordVisible.value,
         keyboardType: keyboardType,
         style: const TextStyle(color: Colors.white),
         decoration: InputDecoration(
@@ -152,6 +145,19 @@ class _LoginPageState extends State<LoginPage> {
             horizontal: 4.w,
             vertical: 1.5.h,
           ),
+          suffixIcon: isPassword
+              ? Obx(() {
+                  return IconButton(
+                    icon: Icon(
+                      _loginController.isPasswordVisible.value
+                          ? Icons.visibility
+                          : Icons.visibility_off,
+                      color: Colors.white.withOpacity(0.7),
+                    ),
+                    onPressed: _loginController.togglePasswordVisibility,
+                  );
+                })
+              : null,
         ),
       ),
     );

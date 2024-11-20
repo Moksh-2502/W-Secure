@@ -16,24 +16,18 @@ class NavigationController extends GetxController {
   }
 
   void changeIndex(int index) {
-    if (_selectedIndex.value == index) return;
+    if (_selectedIndex.value == index) return; // Prevent unnecessary reload
     _selectedIndex.value = index;
 
     switch (index) {
       case 0:
-        Get.offNamed(AppRoutes.HOME);
-        break;
-      case 1:
-        Get.offNamed(AppRoutes.SOS);
-        break;
-      case 2:
-        Get.offNamed(AppRoutes.BOOK);
-        break;
-      case 3:
-        Get.offNamed(AppRoutes.MAP);
+        Get.offNamed(AppRoutes.HOME); // Navigate to HomePage
         break;
       case 4:
-        Get.offNamed(AppRoutes.PROFILE);
+        Get.offNamed(AppRoutes.PROFILE); // Navigate to ProfilePage
+        break;
+      default:
+        // Handle other cases if needed
         break;
     }
   }
@@ -42,12 +36,6 @@ class NavigationController extends GetxController {
     switch (route) {
       case AppRoutes.HOME:
         return 0;
-      case AppRoutes.SOS:
-        return 1;
-      case AppRoutes.BOOK:
-        return 2;
-      case AppRoutes.MAP:
-        return 3;
       case AppRoutes.PROFILE:
         return 4;
       default:

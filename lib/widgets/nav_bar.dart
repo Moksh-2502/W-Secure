@@ -22,8 +22,8 @@ class BottomNavBar extends GetView<NavigationController> {
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
             _buildNavItem(Icons.coffee_outlined, 0, 'Home'),
-            _buildNavItem(Icons.shield_outlined, 1, 'SOS'),
-            _buildNavItem(Icons.book_outlined, 2, 'Book'),
+            // _buildNavItem(Icons.shield_outlined, 1, 'SOS'),
+            // _buildNavItem(Icons.book_outlined, 2, 'Book'),
             _buildNavItem(Icons.map_outlined, 3, 'Map'),
             _buildNavItem(Icons.person_outline, 4, 'Profile'),
           ],

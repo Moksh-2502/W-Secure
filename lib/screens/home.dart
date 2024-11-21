@@ -10,58 +10,44 @@ class HomePage extends GetView<HomeController> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      bottomNavigationBar: const BottomNavBar(),
       backgroundColor: const Color(0xFFFFE4D0),
-      body: SafeArea(
-        child: SingleChildScrollView(
-          child: Padding(
-            padding: EdgeInsets.symmetric(horizontal: 5.w, vertical: 2.h),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                SizedBox(height: 4.h),
-                const Text(
-                  'SOS',
-                  style: TextStyle(
-                    fontSize: 24,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                SizedBox(
-                  height: 35.h,
-                  child: Container(
-                    height: 30.h,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(12),
-                      image: const DecorationImage(
-                        image: AssetImage('assets/logo.png'),
-                        fit: BoxFit.cover,
-                      ),
-                    ),
-                  ),
-                ),
-                SizedBox(height: 5.h),
-                _buildButton(
-                  'Call Helpline',
-                  controller.makeEmergencyCall,
-                ),
-                SizedBox(height: 2.h),
-                _buildButton(
-                  'Share Live Location',
-                  controller.shareLocation,
-                ),
-                SizedBox(height: 2.h),
-                Obx(() => _buildButton(
-                      controller.isRecording.value
-                          ? 'Stop Recording'
-                          : 'Take A Video',
-                      controller.toggleVideoRecording,
-                    )),
-                SizedBox(height: 3.h),
-                BottomNavBar(),
-              ],
+      body: Column(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        mainAxisSize: MainAxisSize.max,
+        children: [
+          const Text(
+            'SOS',
+            style: TextStyle(
+              fontSize: 24,
+              fontWeight: FontWeight.bold,
             ),
           ),
-        ),
+          Container(
+            height: 30.h,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(12),
+              image: const DecorationImage(
+                image: AssetImage('assets/logo.png'),
+                fit: BoxFit.contain,
+              ),
+            ),
+          ),
+          _buildButton(
+            'Call Helpline',
+            controller.makeEmergencyCall,
+          ),
+          _buildButton(
+            'Share Live Location',
+            controller.shareLocation,
+          ),
+          Obx(() => _buildButton(
+                controller.isRecording.value
+                    ? 'Stop Recording'
+                    : 'Take A Video',
+                controller.toggleVideoRecording,
+              )),
+        ],
       ),
     );
   }

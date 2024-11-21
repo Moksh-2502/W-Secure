@@ -7,10 +7,11 @@ import 'package:security/controllers/profile_controller.dart';
 import 'package:security/widgets/nav_bar.dart';
 
 class ProfilePage extends StatelessWidget {
-  final ProfileController controller = Get.put(ProfileController());
+  const ProfilePage({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final ProfileController controller = Get.find();
     return Scaffold(
       backgroundColor: const Color(0xFFFCEACD),
       appBar: AppBar(

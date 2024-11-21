@@ -16,7 +16,7 @@ late List<CameraDescription> cameras;
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
-
+  final ProfileController controller = Get.put(ProfileController());
   // Get the available cameras
   cameras = await availableCameras();
 
@@ -67,7 +67,7 @@ class MyApp extends StatelessWidget {
             colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
             useMaterial3: true,
           ),
-          initialRoute: isSignedIn ? AppRoutes.HOME : AppRoutes.LOGIN,
+          initialRoute: isSignedIn ? AppRoutes.home : AppRoutes.login,
           getPages: AppRoutes.routes,
         );
       },

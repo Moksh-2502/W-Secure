@@ -10,6 +10,7 @@ class RegisterController extends GetxController {
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
   final confirmPasswordController = TextEditingController();
+  final emergencyContactController = TextEditingController();
 
   var isPasswordVisible = false.obs;
   var isConfirmPasswordVisible = false.obs;
@@ -26,8 +27,7 @@ class RegisterController extends GetxController {
     };
 
   final FirebaseAuth _auth = FirebaseAuth.instance;
-  final FirebaseFirestore _firestore =
-      FirebaseFirestore.instance; // Firestore instance
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
   void togglePasswordVisibility() {
     isPasswordVisible.value = !isPasswordVisible.value;
@@ -42,6 +42,7 @@ class RegisterController extends GetxController {
     final email = emailController.text.trim();
     final password = passwordController.text.trim();
     final confirmPassword = confirmPasswordController.text.trim();
+    final emergencyContact = emergencyContactController.text.trim();
 
     if (!agreesToTerms.value) {
       Get.snackbar("Error", "You must agree to the Terms and Privacy Policy.");
@@ -51,7 +52,8 @@ class RegisterController extends GetxController {
     if (name.isEmpty ||
         email.isEmpty ||
         password.isEmpty ||
-        confirmPassword.isEmpty) {
+        confirmPassword.isEmpty ||
+        emergencyContact.isEmpty) {
       Get.snackbar("Error", "All fields are required.");
       return;
     }
@@ -72,7 +74,6 @@ class RegisterController extends GetxController {
         email: email,
         password: password,
       );
-
       await userCredential.user?.updateDisplayName(name);
 
       final userDocRef =
@@ -80,8 +81,9 @@ class RegisterController extends GetxController {
       await userDocRef.set({
         'name': name,
         'email': email,
-        'phone': '', // Default empty phone number
-        'profilePicture': '', // Default empty profile picture
+        'emergencyContact': emergencyContact,
+        'phone': '',
+        'profilePicture': '',
       });
 
       Get.offAll(() => const HomePage());
@@ -97,6 +99,7 @@ class RegisterController extends GetxController {
     emailController.dispose();
     passwordController.dispose();
     confirmPasswordController.dispose();
+    emergencyContactController.dispose();
     super.onClose();
   }
 }

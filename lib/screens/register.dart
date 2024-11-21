@@ -127,6 +127,38 @@ class RegisterScreen extends GetView<RegisterController> {
                         padding: EdgeInsets.only(top: 2.h),
                         child: SizedBox(
                           width: 90.w,
+                          child: TextField(
+                            controller: controller.emergencyContactController,
+                            keyboardType: TextInputType.phone,
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 16.sp,
+                            ),
+                            decoration: InputDecoration(
+                              labelText: "Emergency Contact",
+                              labelStyle: TextStyle(
+                                color: Colors.white54,
+                                fontSize: 14.sp,
+                              ),
+                              filled: true,
+                              fillColor: Colors.black54,
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(12),
+                                borderSide: BorderSide.none,
+                              ),
+                              prefixIcon: Icon(
+                                Icons.contact_phone,
+                                color: Colors.white54,
+                                size: 20.sp,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                      Padding(
+                        padding: EdgeInsets.only(top: 2.h),
+                        child: SizedBox(
+                          width: 90.w,
                           child: Obx(() => TextField(
                                 controller: controller.passwordController,
                                 obscureText:

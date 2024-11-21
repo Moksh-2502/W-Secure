@@ -53,8 +53,6 @@ dependencies:
   photo_manager: ^3.6.2
   gallery_saver: ^2.3.2
   
-dependency_overrides:
-  http: ^0.13.3
 
 dev_dependencies:
   flutter_test:

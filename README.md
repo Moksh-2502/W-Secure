@@ -1,16 +1,9 @@
 # Naari-Suraksha
 
-A new Flutter project.
+A Social Security App
 
-## Getting Started
+## Overview 
 
-This project is a starting point for a Flutter application.
+This project is a mix of two things, one is android app with security features like location sharing, helpline calling and video recording that'll be stored on the web so that it cannot be tampered (no redirection to the camera to maintain low profile whole recording)
 
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+Code to 3 AI models is also present that can be implemented in CCTV cameras to detect women in danger by analysing the number to men following one women and gestures of the women(timid, running).

@@ -4,38 +4,40 @@ import 'package:security/binding/login_binding.dart';
 import 'package:security/binding/register_binding.dart';
 import 'package:security/screens/home.dart';
 import 'package:security/screens/login_screen.dart';
+import 'package:security/screens/map_screen.dart';
 import 'package:security/screens/profile_screen.dart';
 import 'package:security/screens/register.dart';
 
 class AppRoutes {
-  static const String LOGIN = '/login';
-  static const String REGISTER = '/register';
+  static const String login = '/login';
+  static const String register = '/register';
 
-  static const String HOME = '/home';
-  static const String SOS = '/sos';
-  static const String BOOK = '/book';
-  static const String MAP = '/map';
-  static const String PROFILE = '/profile';
+  static const String home = '/home';
+  static const String sos = '/sos';
+  static const String book = '/book';
+  static const String map = '/map';
+  static const String profile = '/profile';
 
   static List<GetPage> routes = [
     GetPage(
-      name: LOGIN,
+      name: login,
       page: () => LoginPage(),
       binding: LoginBinding(),
     ),
     GetPage(
-      name: REGISTER,
+      name: register,
       page: () => const RegisterScreen(),
       binding: RegisterBinding(),
     ),
     GetPage(
-      name: HOME,
+      name: home,
       page: () => const HomePage(),
       binding: InitialBinding(),
     ),
     GetPage(
-      name: PROFILE,
-      page: () => ProfilePage(),
+      name: profile,
+      page: () => const ProfilePage(),
     ),
+    GetPage(name: map, page: () => const MapScreen())
   ];
 }

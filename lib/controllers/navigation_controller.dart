@@ -21,10 +21,13 @@ class NavigationController extends GetxController {
 
     switch (index) {
       case 0:
-        Get.offNamed(AppRoutes.HOME); // Navigate to HomePage
+        Get.offNamed(AppRoutes.home); // Navigate to HomePage
+        break;
+      case 3:
+        Get.offNamed(AppRoutes.map); // Navigate to MapScreen
         break;
       case 4:
-        Get.offNamed(AppRoutes.PROFILE); // Navigate to ProfilePage
+        Get.offNamed(AppRoutes.profile); // Navigate to ProfilePage
         break;
       default:
         // Handle other cases if needed
@@ -34,9 +37,11 @@ class NavigationController extends GetxController {
 
   int _getIndexFromRoute(String route) {
     switch (route) {
-      case AppRoutes.HOME:
+      case AppRoutes.home:
         return 0;
-      case AppRoutes.PROFILE:
+      case AppRoutes.map:
+        return 3;
+      case AppRoutes.profile:
         return 4;
       default:
         return 0;

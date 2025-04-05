@@ -1,6 +1,8 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get/get.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import '../screens/set_pin_screen.dart';
 
 class AuthController extends GetxController {
   final FirebaseAuth _auth = FirebaseAuth.instance;
@@ -21,12 +23,53 @@ class AuthController extends GetxController {
       );
 
       await _auth.signInWithCredential(credential);
-      isSignedIn.value = true;
-      Get.snackbar("Login Success", "Welcome, ${user?.displayName}!",
-          snackPosition: SnackPosition.BOTTOM);
+
+      if (user != null) {
+        isSignedIn.value = true;
+        Get.snackbar("Login Success", "Welcome, ${user?.displayName}!",
+            snackPosition: SnackPosition.BOTTOM);
+        Get.offAllNamed('/home'); // Redirect to home page
+      }
     } catch (error) {
       Get.snackbar("Login Error", error.toString(),
           snackPosition: SnackPosition.BOTTOM);
+    }
+  }
+
+  Future<void> loginWithEmailAndPassword(String email, String password) async {
+    try {
+      await FirebaseAuth.instance.signInWithEmailAndPassword(
+        email: email,
+        password: password,
+      );
+      Get.offAllNamed('/home'); // Navigate to home page on successful login
+    } catch (e) {
+      Get.snackbar('Login Failed', e.toString(),
+          snackPosition: SnackPosition.BOTTOM);
+    }
+  }
+
+  Future<void> registerUser(String email, String password) async {
+    try {
+      final UserCredential userCredential = await FirebaseAuth.instance
+          .createUserWithEmailAndPassword(email: email, password: password);
+
+      if (userCredential.user != null) {
+        // Add user to Firestore
+        await FirebaseFirestore.instance
+            .collection('users')
+            .doc(userCredential.user!.uid)
+            .set({
+          'email': email,
+          'emergencyContact': '', // Placeholder for emergency contact
+          'app_pin': '', // Placeholder for app PIN
+        });
+
+        // Navigate to SetPinScreen
+        Get.offAll(() => SetPinScreen());
+      }
+    } catch (e) {
+      Get.snackbar('Error', 'Failed to register: $e');
     }
   }
 

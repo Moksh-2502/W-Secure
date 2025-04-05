@@ -2,7 +2,7 @@ name: security
 description: "A new Flutter project."
 # The following line prevents the package from being accidentally published to
 # pub.dev using `flutter pub publish`. This is preferred for private packages.
-publish_to: 'none' # Remove this line if you wish to publish to pub.dev
+publish_to: "none" # Remove this line if you wish to publish to pub.dev
 
 # The following defines the version and build number for your application.
 # A version number is three numbers separated by dots, like 1.2.43
@@ -30,14 +30,12 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-
-
   flutter_map:
   flutter_map_location_marker: ^9.1.1
   latlong2: ^0.9.1
   flutter_map_marker_cluster: ^1.4.0
   cupertino_icons: ^1.0.8
-  responsive_sizer: ^3.3.1 
+  responsive_sizer: ^3.3.1
   firebase_auth: ^5.3.3
   get: ^4.6.6
   google_sign_in: ^6.2.2
@@ -54,8 +52,11 @@ dependencies:
   firebase_app_check: ^0.3.1+6
   path_provider: ^2.1.5
   photo_manager: ^3.6.2
-  gallery_saver: ^2.3.2
-  
+  location: ^8.0.0
+  telephony: ^0.2.0
+
+dependency_overrides:
+  http: ^0.13.3
 
 dev_dependencies:
   flutter_test:
@@ -66,20 +67,19 @@ dev_dependencies:
   # activated in the `analysis_options.yaml` file located at the root of your
   # package. See that file for information about deactivating specific lint
   # rules and activating additional ones.
-  flutter_lints: ^4.0.0
+  flutter_lints: ^5.0.0
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
 
 # The following section is specific to Flutter packages.
 flutter:
-
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in
   # the material Icons class.
   uses-material-design: true
   assets:
-      - assets/
+    - assets/
 
   # To add assets to your application, add an assets section, like this:
   # assets:
@@ -107,6 +107,11 @@ flutter:
   #     fonts:
   #       - asset: fonts/TrajanPro.ttf
   #       - asset: fonts/TrajanPro_Bold.ttf
+  #         weight: 700
+  #   - family: ComicSans
+  #     fonts:
+  #       - asset: assets/fonts/ComicSans-Regular.ttf
+  #       - asset: assets/fonts/ComicSans-Bold.ttf
   #         weight: 700
   #
   # For details regarding fonts from package dependencies,

@@ -1,6 +1,6 @@
 {
-    "name": "security",
-    "short_name": "security",
+    "name": "w_secure",
+    "short_name": "w_secure",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",

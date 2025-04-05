@@ -1,163 +1,174 @@
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
-import 'package:security/controllers/login_controller.dart';
-import 'package:security/widgets/background_widget.dart';
+import '../controllers/auth_controller.dart';
 
 class LoginPage extends StatelessWidget {
-  LoginPage({super.key});
-
-  final LoginController _loginController = Get.find<LoginController>();
+  final AuthController _authController = Get.put(AuthController());
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
-    final isSmallScreen = MediaQuery.of(context).size.width < 600;
-
-    return BackgroundPage(
-      child: Padding(
-        padding: EdgeInsets.symmetric(horizontal: 5.w).copyWith(top: 10.h),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.end,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Padding(
-              padding: EdgeInsets.only(bottom: 5.h),
-              child: Text(
+    return Scaffold(
+      body: Container(
+        height: 100.h,
+        width: 100.w,
+        decoration: const BoxDecoration(
+          image: DecorationImage(
+            image: AssetImage('assets/splash.png'),
+            fit: BoxFit.cover,
+          ),
+        ),
+        child: Padding(
+          padding: EdgeInsets.only(bottom: 7.w, left: 5.w, right: 5.w),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.end,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
                 'Login',
-                style: Theme.of(context).textTheme.headlineLarge?.copyWith(
-                      color: const Color(0xFFFFECD0),
-                      fontWeight: FontWeight.w600,
-                    ),
+                style: TextStyle(
+                  fontSize: 32.sp,
+                  fontWeight: FontWeight.bold,
+                  color: const Color(0xFFFFE4D0),
+                  fontFamily: GoogleFonts.nunito().fontFamily,
+                ),
               ),
-            ),
-            _buildTextField(
-              controller: _loginController.emailController,
-              label: 'Email',
-              keyboardType: TextInputType.emailAddress,
-            ),
-            Padding(
-              padding: EdgeInsets.symmetric(vertical: 2.h),
-              child: _buildTextField(
-                controller: _loginController.passwordController,
-                label: 'Password',
-                isPassword: true,
+              SizedBox(height: 5.h),
+              TextField(
+                controller: _emailController,
+                decoration: InputDecoration(
+                  labelText: 'Email',
+                  labelStyle: TextStyle(color: Colors.white),
+                  enabledBorder: OutlineInputBorder(
+                    borderSide: BorderSide(color: Colors.white),
+                    borderRadius: BorderRadius.circular(4.w),
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderSide: BorderSide(color: Colors.white),
+                    borderRadius: BorderRadius.circular(4.w),
+                  ),
+                ),
               ),
-            ),
-            Align(
-              alignment: Alignment.centerRight,
-              child: Padding(
-                padding: EdgeInsets.only(bottom: 3.h),
+              SizedBox(height: 2.h),
+              TextField(
+                controller: _passwordController,
+                obscureText: true,
+                decoration: InputDecoration(
+                  labelText: 'Password',
+                  labelStyle: TextStyle(color: Colors.white),
+                  enabledBorder: OutlineInputBorder(
+                    borderSide: BorderSide(color: Colors.white),
+                    borderRadius: BorderRadius.circular(4.w),
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderSide: BorderSide(color: Colors.white),
+                    borderRadius: BorderRadius.circular(4.w),
+                  ),
+                ),
+              ),
+              Align(
+                alignment: Alignment.centerRight,
                 child: TextButton(
-                  onPressed: _loginController.forgotPassword,
-                  child: const Text(
+                  onPressed: () {},
+                  child: Text(
                     'Forgot Password?',
                     style: TextStyle(
-                      color: Color(0xFFFFECD0),
+                      color: Color(0xFFFFE4D0),
+                      fontWeight: FontWeight.bold,
+                      fontFamily: GoogleFonts.nunito().fontFamily,
                     ),
                   ),
                 ),
               ),
-            ),
-            Padding(
-              padding: EdgeInsets.symmetric(vertical: 3.h),
-              child: Row(
+              SizedBox(height: 2.h),
+              Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text.rich(
-                    TextSpan(
-                      text: 'New Here? ',
-                      style: const TextStyle(color: Color(0xFFFFECD0)),
-                      children: [
-                        TextSpan(
-                          text: 'Register',
-                          style: const TextStyle(
-                            color: Color(0xFFFFECD0),
-                            fontWeight: FontWeight.bold,
-                            decoration: TextDecoration.underline,
-                          ),
-                          recognizer: TapGestureRecognizer()
-                            ..onTap = () {
-                              Get.toNamed('/register');
-                            },
-                        ),
-                      ],
+                  ElevatedButton.icon(
+                    onPressed: () async {
+                      await _authController.loginWithGoogle();
+                    },
+                    icon: Image.asset(
+                      'assets/google_logo.png',
+                      height: 24,
+                      width: 24,
+                    ),
+                    label: Text('Google',
+                        style: TextStyle(
+                          color: Colors.black,
+                          fontSize: 17.sp,
+                          fontWeight: FontWeight.w600,
+                          fontFamily: GoogleFonts.nunito().fontFamily,
+                        )),
+                    style: ElevatedButton.styleFrom(
+                      foregroundColor: Colors.black,
+                      backgroundColor: const Color(0xFFFFE4D0),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8),
+                      ),
                     ),
                   ),
-                  Obx(() {
-                    return ElevatedButton(
-                      onPressed: _loginController.isLoading.value
-                          ? null
-                          : () async {
-                              await _loginController.login();
-                            },
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: const Color(0xFFFFF5E9),
-                        foregroundColor: Colors.black87,
-                        padding: EdgeInsets.symmetric(
-                          horizontal: isSmallScreen ? 6.w : 8.w,
-                          vertical: 2.h,
-                        ),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(8),
-                        ),
+                  ElevatedButton(
+                    onPressed: () async {
+                      final email = _emailController.text.trim();
+                      final password = _passwordController.text.trim();
+
+                      if (email.isEmpty || password.isEmpty) {
+                        Get.snackbar(
+                            'Error', 'Email and Password cannot be empty');
+                        return;
+                      }
+
+                      await _authController.loginWithEmailAndPassword(
+                          email, password);
+                    },
+                    style: ElevatedButton.styleFrom(
+                      foregroundColor: Colors.black,
+                      backgroundColor: const Color(0xFFFFE4D0),
+                      padding:
+                          EdgeInsets.symmetric(horizontal: 10.w, vertical: 2.h),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8),
                       ),
-                      child: _loginController.isLoading.value
-                          ? const CircularProgressIndicator(
-                              color: Colors.black87,
-                            )
-                          : const Text(
-                              'Login',
-                              style: TextStyle(fontSize: 16),
-                            ),
-                    );
-                  }),
+                    ),
+                    child: Text('Login',
+                        style: TextStyle(
+                          color: Colors.black,
+                          fontSize: 17.sp,
+                          fontWeight: FontWeight.bold,
+                          fontFamily: GoogleFonts.nunito().fontFamily,
+                        )),
+                  ),
                 ],
               ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildTextField({
-    required TextEditingController controller,
-    required String label,
-    bool isPassword = false,
-    TextInputType? keyboardType,
-  }) {
-    return Container(
-      decoration: BoxDecoration(
-        border: Border.all(color: Colors.white.withOpacity(0.5)),
-        borderRadius: BorderRadius.circular(8),
-      ),
-      child: TextField(
-        controller: controller,
-        obscureText: isPassword && !_loginController.isPasswordVisible.value,
-        keyboardType: keyboardType,
-        style: const TextStyle(color: Colors.white),
-        decoration: InputDecoration(
-          labelText: label,
-          labelStyle: TextStyle(color: Colors.white.withOpacity(0.9)),
-          border: InputBorder.none,
-          contentPadding: EdgeInsets.symmetric(
-            horizontal: 4.w,
-            vertical: 1.5.h,
-          ),
-          suffixIcon: isPassword
-              ? Obx(() {
-                  return IconButton(
-                    icon: Icon(
-                      _loginController.isPasswordVisible.value
-                          ? Icons.visibility
-                          : Icons.visibility_off,
-                      color: Colors.white.withOpacity(0.7),
+              SizedBox(height: 1.h),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  const Text(
+                    'New Here? ',
+                    style: TextStyle(color: Colors.white),
+                  ),
+                  GestureDetector(
+                    onTap: () {
+                      Get.toNamed('/register');
+                    },
+                    child: const Text(
+                      'Register',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                        decoration: TextDecoration.underline,
+                      ),
                     ),
-                    onPressed: _loginController.togglePasswordVisibility,
-                  );
-                })
-              : null,
+                  ),
+                ],
+              ),
+            ],
+          ),
         ),
       ),
     );

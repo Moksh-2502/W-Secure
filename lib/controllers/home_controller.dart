@@ -1,20 +1,29 @@
-// import 'package:gallery_saver/gallery_saver.dart';
 import 'package:get/get.dart';
 import 'package:camera/camera.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'package:permission_handler/permission_handler.dart';
+import 'package:permission_handler/permission_handler.dart'
+    as permissionHandler; // Aliased permission_handler package
 import 'package:geolocator/geolocator.dart';
 import 'package:share_plus/share_plus.dart';
-import 'dart:io';
+import 'package:location/location.dart'
+    as locationPackage; // Aliased the location package
+import 'package:telephony/telephony.dart';
+import '../screens/emergency_lock_screen.dart';
+import 'dart:async';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'dart:developer';
 
 class HomeController extends GetxController {
   late CameraController cameraController;
   RxBool isRecording = false.obs;
+  final Telephony telephony = Telephony.instance;
+  Timer? _locationUpdateTimer;
 
   @override
   void onInit() {
     super.onInit();
-    initializeCamera();
+    // Camera will now initialize only when explicitly required
   }
 
   @override
@@ -69,7 +78,7 @@ class HomeController extends GetxController {
 
     try {
       final Position position = await Geolocator.getCurrentPosition(
-        locationSettings: const LocationSettings(
+        locationSettings: LocationSettings(
           accuracy: LocationAccuracy.high,
         ),
       );
@@ -91,18 +100,19 @@ class HomeController extends GetxController {
   }
 
   Future<void> toggleVideoRecording() async {
-    final cameraPermission = await Permission.camera.request();
-    final microphonePermission = await Permission.microphone.request();
+    final cameraPermission =
+        await permissionHandler.Permission.camera.request();
+    final microphonePermission =
+        await permissionHandler.Permission.microphone.request();
 
     if (cameraPermission.isGranted && microphonePermission.isGranted) {
       if (isRecording.value) {
         try {
-          final XFile video = await cameraController.stopVideoRecording();
+          await cameraController.stopVideoRecording();
           isRecording.value = false;
-
-          // Save the recorded video to the gallery
-          // await saveVideoToGallery(video.path);
-          // Get.snackbar('Success', 'Video saved to gallery: ${video.path}');
+          cameraController.dispose(); // Release camera and microphone resources
+          await initializeCamera(); // Reinitialize camera for future use
+          Get.snackbar('Success', 'Recording stopped');
         } catch (e) {
           Get.snackbar('Error', 'Failed to stop recording: $e');
         }
@@ -123,32 +133,84 @@ class HomeController extends GetxController {
     }
   }
 
-  // // Function to save video to gallery using path_provider and photo_manager
-  // Future<void> saveVideoToGallery(String videoPath) async {
-  //   try {
-  //     // Request storage permission
-  //     var storagePermission = await Permission.storage.request();
-  //     if (!storagePermission.isGranted) {
-  //       Get.snackbar('Permission Denied', 'Storage permission is required');
-  //       return;
-  //     }
+  Future<String?> fetchEmergencyContact() async {
+    try {
+      final user = FirebaseAuth.instance.currentUser;
+      if (user == null) return null;
 
-  //     if (Platform.isAndroid || Platform.isIOS) {
-  //       final bool? result = await GallerySaver.saveVideo(
-  //         videoPath,
-  //         albumName: 'My Videos', // Optional: specify album name
-  //       );
+      final doc = await FirebaseFirestore.instance
+          .collection('users')
+          .doc(user.uid)
+          .get();
 
-  //       if (result == true) {
-  //         Get.snackbar('Success', 'Video saved to gallery');
-  //       } else {
-  //         Get.snackbar('Error', 'Failed to save video to gallery');
-  //       }
-  //     } else {
-  //       Get.snackbar('Error', 'Unsupported platform');
-  //     }
-  //   } catch (e) {
-  //     Get.snackbar('Error', 'Failed to save video: $e');
-  //   }
-  // }
+      return doc.data()?['emergencyContact'] as String?;
+    } catch (e) {
+      Get.snackbar('Error', 'Failed to fetch emergency contact: $e');
+      return null;
+    }
+  }
+
+  Future<void> activateEmergencyMode() async {
+    locationPackage.Location location = locationPackage.Location();
+    bool serviceEnabled = await location.serviceEnabled();
+    if (!serviceEnabled) {
+      serviceEnabled = await location.requestService();
+      if (!serviceEnabled) return;
+    }
+
+    var locationPermissionStatus =
+        await locationPackage.Location().hasPermission();
+    if (locationPermissionStatus == locationPackage.PermissionStatus.denied) {
+      locationPermissionStatus =
+          await locationPackage.Location().requestPermission();
+      if (locationPermissionStatus != locationPackage.PermissionStatus.granted)
+        return;
+    }
+
+    final emergencyContact = await fetchEmergencyContact();
+    if (emergencyContact == null) {
+      Get.snackbar('Error', 'No emergency contact found');
+      return;
+    }
+
+    _locationUpdateTimer = Timer.periodic(Duration(seconds: 30), (timer) async {
+      locationPackage.LocationData locationData = await location.getLocation();
+      String message =
+          "Emergency! My live location is: https://www.google.com/maps?q=${locationData.latitude},${locationData.longitude}";
+
+      try {
+        await telephony.sendSms(
+          to: emergencyContact,
+          message: message,
+        );
+        log('Location sent: $message');
+      } catch (e) {
+        log('Failed to send location: $e');
+      }
+    });
+
+    Get.to(() => EmergencyLockScreen(onExit: stopEmergencyMode));
+  }
+
+  void stopEmergencyMode() {
+    _locationUpdateTimer?.cancel();
+    _locationUpdateTimer = null;
+    Get.back(); // Exit the lock screen
+  }
+
+  Future<void> setAppPin(String pin) async {
+    try {
+      final user = FirebaseAuth.instance.currentUser;
+      if (user == null) return;
+
+      await FirebaseFirestore.instance
+          .collection('users')
+          .doc(user.uid)
+          .update({'app_pin': pin});
+
+      Get.snackbar('Success', 'PIN updated successfully');
+    } catch (e) {
+      Get.snackbar('Error', 'Failed to update PIN: $e');
+    }
+  }
 }

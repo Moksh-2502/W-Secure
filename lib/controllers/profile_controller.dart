@@ -17,11 +17,15 @@ class ProfileController extends GetxController {
   RxString email = ''.obs;
   RxString phoneNumber = ''.obs;
   RxString profilePictureUrl = ''.obs;
+  RxString originalName = ''.obs;
+  RxString originalPhoneNumber = ''.obs;
 
   @override
   void onInit() {
     super.onInit();
     fetchUserProfile();
+    originalName.value = name.value;
+    originalPhoneNumber.value = phoneNumber.value;
   }
 
   Future<void> fetchUserProfile() async {
@@ -95,6 +99,25 @@ class ProfileController extends GetxController {
       await _firestore.collection('users').doc(user.uid).update({
         'profilePicture': downloadUrl,
       });
+    }
+  }
+
+  Future<void> updateProfile() async {
+    try {
+      final user = FirebaseAuth.instance.currentUser;
+      if (user == null) return;
+
+      await FirebaseFirestore.instance
+          .collection('users')
+          .doc(user.uid)
+          .update({
+        'name': name.value,
+        'emergencyContact': phoneNumber.value,
+      });
+
+      Get.snackbar('Success', 'Profile updated successfully');
+    } catch (e) {
+      Get.snackbar('Error', 'Failed to update profile: $e');
     }
   }
 }

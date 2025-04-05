@@ -56,7 +56,7 @@ class _MapScreenState extends State<MapScreen> {
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance!.addPostFrameCallback((_) {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
       _determinePosition().then((value) {
         setState(() {
           userPos = LatLng(value.latitude, value.longitude);

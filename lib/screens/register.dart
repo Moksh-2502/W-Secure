@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 import 'package:security/controllers/register_controller.dart';
 
@@ -45,6 +46,7 @@ class RegisterScreen extends GetView<RegisterController> {
                               .textTheme
                               .headlineLarge
                               ?.copyWith(
+                                fontFamily: GoogleFonts.nunito().fontFamily,
                                 color: const Color(0xFFFF3974),
                                 fontWeight: FontWeight.w600,
                               ),
@@ -316,7 +318,8 @@ class RegisterScreen extends GetView<RegisterController> {
                               'Proceed',
                               style: TextStyle(
                                 color: Colors.black,
-                                fontSize: 16.sp,
+                                fontFamily: GoogleFonts.nunito().fontFamily,
+                                fontSize: 18.sp,
                                 fontWeight: FontWeight.bold,
                               ),
                             ),

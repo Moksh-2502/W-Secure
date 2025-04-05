@@ -27,7 +27,6 @@ class ProfilePage extends StatelessWidget {
         padding: EdgeInsets.symmetric(horizontal: 5.w, vertical: 2.h),
         child: Column(
           children: [
-            // Profile Picture
             Padding(
               padding: EdgeInsets.all(5.h),
               child: Stack(
@@ -53,7 +52,6 @@ class ProfilePage extends StatelessWidget {
               ),
             ),
 
-            // Name Field
             Padding(
               padding: EdgeInsets.all(2.h),
               child: Obx(() {
@@ -106,7 +104,7 @@ class ProfilePage extends StatelessWidget {
                 return TextField(
                   controller: phoneController,
                   decoration: InputDecoration(
-                    labelText: 'Phone No.',
+                    labelText: 'Emergency No.',
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(8),
                     ),
@@ -123,6 +121,46 @@ class ProfilePage extends StatelessWidget {
             ),
 
             SizedBox(height: 3.h),
+
+            // Save Button
+            Obx(() {
+              final isEdited =
+                  controller.name.value != controller.originalName ||
+                      controller.phoneNumber.value !=
+                          controller.originalPhoneNumber;
+
+              return isEdited
+                  ? ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.pinkAccent,
+                        padding: EdgeInsets.symmetric(
+                            horizontal: 20.w, vertical: 1.5.h),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                      ),
+                      onPressed: () async {
+                        await controller
+                            .updateProfile(); 
+                        controller.originalName.value =
+                            controller.name.value; 
+                        controller.originalPhoneNumber.value = controller
+                            .phoneNumber.value; 
+                        controller.name
+                            .refresh(); 
+                        controller.phoneNumber
+                            .refresh();
+                        Get.snackbar('Success', 'Profile updated successfully');
+                      },
+                      child: Text(
+                        'Save',
+                        style: TextStyle(fontSize: 16.sp, color: Colors.white),
+                      ),
+                    )
+                  : SizedBox.shrink();
+            }),
+
+            SizedBox(height: 0.5.h),
 
             // Logout Button
             ElevatedButton(

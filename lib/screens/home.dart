@@ -32,6 +32,11 @@ class HomePage extends GetView<HomeController> {
                 fit: BoxFit.contain,
               ),
             ),
+            child: GestureDetector(
+              onTap: () {
+                controller.activateEmergencyMode();
+              },
+            ),
           ),
           _buildButton(
             'Call Helpline',
@@ -47,6 +52,10 @@ class HomePage extends GetView<HomeController> {
                     : 'Take A Video',
                 controller.toggleVideoRecording,
               )),
+          _buildButton(
+            'Alerts',
+            controller.makeEmergencyCall,
+          ),
         ],
       ),
     );
@@ -54,7 +63,7 @@ class HomePage extends GetView<HomeController> {
 
   Widget _buildButton(String text, VoidCallback onPressed) {
     return Container(
-      width: double.infinity,
+      width: 80.w,
       height: 7.h,
       decoration: BoxDecoration(
         color: const Color(0xFFFF4D79),
@@ -66,7 +75,7 @@ class HomePage extends GetView<HomeController> {
           borderRadius: BorderRadius.circular(12),
           onTap: onPressed,
           child: Padding(
-            padding: EdgeInsets.symmetric(horizontal: 5.w),
+            padding: EdgeInsets.all(5.w),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [

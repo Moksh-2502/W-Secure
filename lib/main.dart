@@ -16,7 +16,7 @@ late List<CameraDescription> cameras;
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
-  final ProfileController controller = Get.put(ProfileController());
+  Get.put(ProfileController());
   // Get the available cameras
   cameras = await availableCameras();
 
@@ -38,13 +38,10 @@ void main() async {
   // Listen for auth state changes
   FirebaseAuth.instance.authStateChanges().listen((User? user) {
     if (user == null) {
-      // User is signed out
       runApp(const MyApp(
         isSignedIn: false,
       ));
-      // Navigate to login screen
     } else {
-      // User is signed in
       runApp(const MyApp(
         isSignedIn: true,
       )); // Navigate to home screen

@@ -24,6 +24,8 @@ class ProfileController extends GetxController {
   void onInit() {
     super.onInit();
     fetchUserProfile();
+    email.value =
+        _auth.currentUser?.email ?? ''; // Ensure email is fetched correctly
     originalName.value = name.value;
     originalPhoneNumber.value = phoneNumber.value;
   }
@@ -31,14 +33,15 @@ class ProfileController extends GetxController {
   Future<void> fetchUserProfile() async {
     final User? user = _auth.currentUser;
     if (user != null) {
-      email.value = user.email ?? '';
+      email.value = user.email ?? ''; // Fetch email from FirebaseAuth
       final DocumentSnapshot snapshot =
           await _firestore.collection('users').doc(user.uid).get();
 
       if (snapshot.exists) {
         final data = snapshot.data() as Map<String, dynamic>;
         name.value = data['name'] ?? ''; // Fetch name from Firestore
-        phoneNumber.value = data['phone'] ?? '';
+        phoneNumber.value =
+            data['emergencyContact'] ?? ''; // Fetch emergency contact
         profilePictureUrl.value = data['profilePicture'] ?? '';
       }
     }

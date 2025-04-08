@@ -23,7 +23,7 @@ class HomeController extends GetxController {
   @override
   void onInit() {
     super.onInit();
-    // Camera will now initialize only when explicitly required
+    initializeCamera(); 
   }
 
   @override
@@ -34,10 +34,7 @@ class HomeController extends GetxController {
 
   Future<void> initializeCamera() async {
     try {
-      // Safely fetch the list of cameras from GetX
       final cameras = Get.find<List<CameraDescription>>();
-
-      // Ensure there is at least one camera
       if (cameras.isNotEmpty) {
         cameraController = CameraController(
           cameras.first,
@@ -47,11 +44,9 @@ class HomeController extends GetxController {
         await cameraController.initialize();
         update();
       } else {
-        // No cameras available, show error message
         Get.snackbar('Error', 'No cameras available');
       }
     } catch (e) {
-      // Handle any error that occurs during the camera initialization
       Get.snackbar('Error', 'Failed to initialize camera: $e');
     }
   }
@@ -100,6 +95,10 @@ class HomeController extends GetxController {
   }
 
   Future<void> toggleVideoRecording() async {
+    if (!cameraController.value.isInitialized) {
+      await initializeCamera(); 
+    }
+
     final cameraPermission =
         await permissionHandler.Permission.camera.request();
     final microphonePermission =
@@ -110,8 +109,6 @@ class HomeController extends GetxController {
         try {
           await cameraController.stopVideoRecording();
           isRecording.value = false;
-          cameraController.dispose(); // Release camera and microphone resources
-          await initializeCamera(); // Reinitialize camera for future use
           Get.snackbar('Success', 'Recording stopped');
         } catch (e) {
           Get.snackbar('Error', 'Failed to stop recording: $e');

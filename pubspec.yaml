@@ -45,6 +45,7 @@ dependencies:
   url_launcher: ^6.3.1
   share_plus: ^10.1.2
   camera: ^0.11.0+2
+  geocoding: ^2.0.5
   permission_handler: ^11.3.1
   cloud_firestore: ^5.5.0
   firebase_storage: ^12.3.6

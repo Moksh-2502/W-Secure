@@ -10,6 +10,10 @@ import 'package:security/controllers/login_controller.dart';
 import 'package:security/controllers/navigation_controller.dart';
 import 'package:security/controllers/profile_controller.dart';
 import 'package:security/routes/app_routes.dart';
+import 'package:security/screens/connect_nearby_page.dart';
+import 'package:security/screens/police_screen.dart';
+import 'package:security/screens/safespots_screen.dart';
+import 'package:security/services/camera_controller_service.dart';
 
 late List<CameraDescription> cameras;
 
@@ -17,25 +21,20 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
   Get.put(ProfileController());
-  // Get the available cameras
   cameras = await availableCameras();
 
-  // Register the cameras list with GetX
   Get.put<List<CameraDescription>>(cameras);
 
-  // Register other controllers
   Get.put(NavigationController());
   Get.put(LoginController());
   Get.put(AuthController());
   Get.put(HomeController());
   Get.put(ProfileController());
-  Get.put(CameraController(
-    cameras.first,
-    ResolutionPreset.high,
-    enableAudio: true,
-  ));
 
-  // Listen for auth state changes
+  final cameraService = CameraControllerService();
+  await cameraService.initializeCamera(cameras);
+  Get.put<CameraControllerService>(cameraService);
+
   FirebaseAuth.instance.authStateChanges().listen((User? user) {
     if (user == null) {
       runApp(const MyApp(
@@ -44,7 +43,7 @@ void main() async {
     } else {
       runApp(const MyApp(
         isSignedIn: true,
-      )); // Navigate to home screen
+      ));
     }
   });
 }
@@ -65,7 +64,21 @@ class MyApp extends StatelessWidget {
             useMaterial3: true,
           ),
           initialRoute: isSignedIn ? AppRoutes.home : AppRoutes.login,
-          getPages: AppRoutes.routes,
+          getPages: [
+            ...AppRoutes.routes,
+            GetPage(
+              name: '/police-stations',
+              page: () => PoliceStationsPage(),
+            ),
+            GetPage(
+              name: '/safe-spots',
+              page: () => SafeSpotsPage(),
+            ),
+            GetPage(
+              name: '/connectNearby',
+              page: () => ConnectNearbyPage(),
+            ),
+          ],
         );
       },
     );

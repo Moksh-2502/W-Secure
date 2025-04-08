@@ -21,9 +21,9 @@ class BottomNavBar extends GetView<NavigationController> {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
+            _buildNavItem(Icons.local_police_outlined, 5, 'Police Stations'),
+            _buildNavItem(Icons.health_and_safety_sharp, 1, 'Safe Spots'),
             _buildNavItem(Icons.home_outlined, 0, 'Home'),
-            // _buildNavItem(Icons.shield_outlined, 1, 'SOS'),
-            // _buildNavItem(Icons.book_outlined, 2, 'Book'),
             _buildNavItem(Icons.map_outlined, 3, 'Map'),
             _buildNavItem(Icons.person_outline, 4, 'Profile'),
           ],
@@ -36,7 +36,15 @@ class BottomNavBar extends GetView<NavigationController> {
     return Tooltip(
       message: label,
       child: GestureDetector(
-        onTap: () => controller.changeIndex(index),
+        onTap: () {
+          controller.changeIndex(index);
+          if (index == 5) {
+            Get.toNamed('/police-stations');
+          }
+          if (index == 1) {
+            Get.toNamed('/safe-spots');
+          }
+        },
         child: Container(
           padding: EdgeInsets.all(3.w),
           decoration: BoxDecoration(

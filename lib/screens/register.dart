@@ -3,6 +3,8 @@ import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 import 'package:security/controllers/register_controller.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class RegisterScreen extends GetView<RegisterController> {
   const RegisterScreen({super.key});
@@ -307,7 +309,26 @@ class RegisterScreen extends GetView<RegisterController> {
                           width: 90.w,
                           height: 6.h,
                           child: ElevatedButton(
-                            onPressed: controller.register,
+                            onPressed: () async {
+                              try {
+                                await controller.register();
+                                final user = FirebaseAuth.instance.currentUser;
+                                if (user != null) {
+                                  await FirebaseFirestore.instance
+                                      .collection('users')
+                                      .doc(user.uid)
+                                      .set({
+                                    'name': controller.nameController.text,
+                                    'email': controller.emailController.text,
+                                    'emergencyContact': controller
+                                        .emergencyContactController.text,
+                                  }, SetOptions(merge: true));
+                                }
+                              } catch (e) {
+                                Get.snackbar('Error', e.toString(),
+                                    snackPosition: SnackPosition.BOTTOM);
+                              }
+                            },
                             style: ElevatedButton.styleFrom(
                               backgroundColor: const Color(0xFFFFECD0),
                               shape: RoundedRectangleBorder(

@@ -68,24 +68,18 @@ class _MapScreenState extends State<MapScreen> {
   @override
   Widget build(BuildContext context) {
     const styleUrl =
-        "https://tiles.stadiamaps.com/tiles/alidade_smooth_dark/{z}/{x}/{y}{r}.png";
+        "https://tiles.stadiamaps.com/tiles/alidade_smooth/{z}/{x}/{y}{r}.png"; // Updated to light mode style
     const apiKey = "a1e9793d-bed4-4986-949c-24f3abf9e654";
     return userPos == null
         ? Center(child: CircularProgressIndicator())
         : Scaffold(
-            backgroundColor: const Color(0xFFFFE4D0),
-            appBar: AppBar(
-              title: const Text('Safe Spaces'),
-              centerTitle: true,
-              backgroundColor: Colors.transparent,
-            ),
             bottomNavigationBar: BottomNavBar(),
             extendBody: true,
             body: FlutterMap(
               options: MapOptions(
                   initialCenter: userPos!,
-                  // center: LatLng(59.438484, 24.742595),
-                  initialZoom: 12,
+                  initialZoom:
+                      15, 
                   keepAlive: true),
               children: [
                 TileLayer(

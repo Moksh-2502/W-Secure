@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 import '../controllers/home_controller.dart';
 import '../widgets/nav_bar.dart';
+import 'alerts_screen.dart';
 
 class HomePage extends GetView<HomeController> {
   const HomePage({super.key});
@@ -54,7 +55,7 @@ class HomePage extends GetView<HomeController> {
               )),
           _buildButton(
             'Alerts',
-            controller.makeEmergencyCall,
+            () => Get.to(() => AlertsPage()),
           ),
         ],
       ),

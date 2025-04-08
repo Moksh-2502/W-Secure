@@ -18,15 +18,24 @@ class AlertsService {
       if (user == null) {
         throw Exception("User not logged in");
       }
-      final response = await http.get(Uri.parse(
-          'https://nominatim.openstreetmap.org/search?q=$location&format=json&limit=1'));
+
+      final encodedLocation = Uri.encodeComponent(location);
+      final response = await http.get(
+        Uri.parse(
+            'https://nominatim.openstreetmap.org/search?q=$encodedLocation&format=json&limit=1'),
+        headers: {
+          'User-Agent': 'w_secure_app/1.0 (your_email@example.com)',
+        },
+      );
 
       if (response.statusCode != 200) {
+        print('Nominatim API error: ${response.body}');
         throw Exception("Failed to fetch coordinates for the location.");
       }
 
       final List<dynamic> data = json.decode(response.body);
       if (data.isEmpty) {
+        print('No results found for location: $location');
         throw Exception("No results found for the location.");
       }
 

@@ -18,8 +18,6 @@ class AlertsService {
       if (user == null) {
         throw Exception("User not logged in");
       }
-
-      // Fetch coordinates from Nominatim API
       final response = await http.get(Uri.parse(
           'https://nominatim.openstreetmap.org/search?q=$location&format=json&limit=1'));
 

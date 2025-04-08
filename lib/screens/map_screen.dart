@@ -68,7 +68,7 @@ class _MapScreenState extends State<MapScreen> {
   @override
   Widget build(BuildContext context) {
     const styleUrl =
-        "https://tiles.stadiamaps.com/tiles/alidade_smooth/{z}/{x}/{y}{r}.png"; // Updated to light mode style
+        "https://tiles.stadiamaps.com/tiles/alidade_smooth/{z}/{x}/{y}{r}.png"; 
     const apiKey = "a1e9793d-bed4-4986-949c-24f3abf9e654";
     return userPos == null
         ? Center(child: CircularProgressIndicator())

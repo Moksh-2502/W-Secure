@@ -7,6 +7,8 @@ import '../controllers/alerts_controller.dart';
 class AlertsPage extends StatelessWidget {
   final AlertsController controller = Get.put(AlertsController());
 
+  AlertsPage({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(

@@ -16,21 +16,20 @@ class NavigationController extends GetxController {
   }
 
   void changeIndex(int index) {
-    if (_selectedIndex.value == index) return; // Prevent unnecessary reload
+    if (_selectedIndex.value == index) return; 
     _selectedIndex.value = index;
 
     switch (index) {
       case 0:
-        Get.offNamed(AppRoutes.home); // Navigate to HomePage
+        Get.offNamed(AppRoutes.home); 
         break;
       case 3:
-        Get.offNamed(AppRoutes.map); // Navigate to MapScreen
+        Get.offNamed(AppRoutes.map); 
         break;
       case 4:
-        Get.offNamed(AppRoutes.profile); // Navigate to ProfilePage
+        Get.offNamed(AppRoutes.profile); 
         break;
       default:
-        // Handle other cases if needed
         break;
     }
   }

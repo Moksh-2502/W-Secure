@@ -5,16 +5,16 @@ import 'package:responsive_sizer/responsive_sizer.dart';
 
 class EmergencyLockScreen extends StatelessWidget {
   final TextEditingController _passwordController = TextEditingController();
-  final String _lockPassword = "1234"; // Replace with a secure password
+  final String _lockPassword = "1234"; 
   final VoidCallback onExit;
 
-  EmergencyLockScreen({required this.onExit});
+  EmergencyLockScreen({super.key, required this.onExit});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       resizeToAvoidBottomInset:
-          true, // Added to prevent overflow when keyboard opens
+          true, 
       body: Container(
         decoration: const BoxDecoration(
           image: DecorationImage(

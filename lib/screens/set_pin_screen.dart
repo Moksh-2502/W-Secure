@@ -6,6 +6,8 @@ class SetPinScreen extends StatelessWidget {
   final TextEditingController _pinController = TextEditingController();
   final HomeController _homeController = Get.find<HomeController>();
 
+  SetPinScreen({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -32,7 +34,7 @@ class SetPinScreen extends StatelessWidget {
                 if (pin.isNotEmpty) {
                   await _homeController.setAppPin(pin);
                   Get.offAllNamed(
-                      '/home'); // Navigate to home page after saving PIN
+                      '/home'); 
                 } else {
                   Get.snackbar('Error', 'PIN cannot be empty');
                 }

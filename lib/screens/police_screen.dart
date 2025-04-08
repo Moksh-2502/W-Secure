@@ -8,6 +8,8 @@ class PoliceStationsPage extends StatelessWidget {
   final PoliceStationsController controller =
       Get.put(PoliceStationsController());
 
+   PoliceStationsPage({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(

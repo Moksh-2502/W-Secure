@@ -87,7 +87,7 @@ class ConnectNearbyController extends GetxController {
         return placemarks.first.name ?? 'Unknown location';
       }));
       isSnackbarShown =
-          false; // Reset the flag when suggestions are fetched successfully
+          false; 
     } catch (e) {
       print('Error fetching location suggestions: $e');
       locationSuggestions.clear();
@@ -95,7 +95,7 @@ class ConnectNearbyController extends GetxController {
         Get.snackbar('Notice', 'Try using the locator.',
             snackPosition: SnackPosition.BOTTOM);
         isSnackbarShown =
-            true; // Set the flag to true to prevent repeated snackbars
+            true; 
       }
     }
   }
@@ -106,6 +106,6 @@ class ConnectNearbyController extends GetxController {
     if (Get.isSnackbarOpen) {
       Get.closeAllSnackbars();
     }
-    isSnackbarShown = false; // Reset the flag when a location is selected
+    isSnackbarShown = false; 
   }
 }

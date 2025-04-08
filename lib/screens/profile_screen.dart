@@ -53,7 +53,6 @@ class ProfilePage extends StatelessWidget {
                     ],
                   ),
                 ),
-
                 Padding(
                   padding: EdgeInsets.all(2.h),
                   child: Obx(() {
@@ -78,8 +77,6 @@ class ProfilePage extends StatelessWidget {
                     );
                   }),
                 ),
-
-                // Email Field
                 Padding(
                   padding: EdgeInsets.all(2.h),
                   child: Obx(() => TextField(
@@ -94,8 +91,6 @@ class ProfilePage extends StatelessWidget {
                         ),
                       )),
                 ),
-
-                // Phone Number Field
                 Padding(
                   padding: EdgeInsets.all(2.h),
                   child: Obx(() {
@@ -121,10 +116,7 @@ class ProfilePage extends StatelessWidget {
                     );
                   }),
                 ),
-
                 SizedBox(height: 3.h),
-
-                // Save Button
                 Obx(() {
                   final isEdited =
                       controller.name.value != controller.originalName ||
@@ -160,10 +152,7 @@ class ProfilePage extends StatelessWidget {
                         )
                       : SizedBox.shrink();
                 }),
-
                 SizedBox(height: 0.5.h),
-
-                // Logout Button
                 ElevatedButton(
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.pinkAccent,

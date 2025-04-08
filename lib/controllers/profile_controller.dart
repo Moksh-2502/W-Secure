@@ -25,7 +25,7 @@ class ProfileController extends GetxController {
     super.onInit();
     fetchUserProfile();
     email.value =
-        _auth.currentUser?.email ?? ''; // Ensure email is fetched correctly
+        _auth.currentUser?.email ?? ''; 
     originalName.value = name.value;
     originalPhoneNumber.value = phoneNumber.value;
   }
@@ -33,28 +33,27 @@ class ProfileController extends GetxController {
   Future<void> fetchUserProfile() async {
     final User? user = _auth.currentUser;
     if (user != null) {
-      email.value = user.email ?? ''; // Fetch email from FirebaseAuth
+      email.value = user.email ?? ''; 
       final DocumentSnapshot snapshot =
           await _firestore.collection('users').doc(user.uid).get();
 
       if (snapshot.exists) {
         final data = snapshot.data() as Map<String, dynamic>;
-        name.value = data['name'] ?? ''; // Fetch name from Firestore
+        name.value = data['name'] ?? ''; 
         phoneNumber.value =
-            data['emergencyContact'] ?? ''; // Fetch emergency contact
+            data['emergencyContact'] ?? ''; 
         profilePictureUrl.value = data['profilePicture'] ?? '';
       }
     }
   }
 
-  // Update the name on Firestore and in the UI
   Future<void> updateName(String newName) async {
     final User? user = _auth.currentUser;
     if (user != null) {
       await _firestore.collection('users').doc(user.uid).update({
         'name': newName,
       });
-      name.value = newName; // Update the observable variable
+      name.value = newName; 
     }
   }
 

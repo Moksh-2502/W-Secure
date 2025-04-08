@@ -28,7 +28,7 @@ class AuthController extends GetxController {
         isSignedIn.value = true;
         Get.snackbar("Login Success", "Welcome, ${user?.displayName}!",
             snackPosition: SnackPosition.BOTTOM);
-        Get.offAllNamed('/home'); // Redirect to home page
+        Get.offAllNamed('/home');
       }
     } catch (error) {
       Get.snackbar("Login Error", error.toString(),
@@ -42,7 +42,7 @@ class AuthController extends GetxController {
         email: email,
         password: password,
       );
-      Get.offAllNamed('/home'); // Navigate to home page on successful login
+      Get.offAllNamed('/home');
     } catch (e) {
       Get.snackbar('Login Failed', e.toString(),
           snackPosition: SnackPosition.BOTTOM);
@@ -55,17 +55,15 @@ class AuthController extends GetxController {
           .createUserWithEmailAndPassword(email: email, password: password);
 
       if (userCredential.user != null) {
-        // Add user to Firestore
         await FirebaseFirestore.instance
             .collection('users')
             .doc(userCredential.user!.uid)
             .set({
           'email': email,
-          'emergencyContact': '', // Placeholder for emergency contact
-          'app_pin': '', // Placeholder for app PIN
+          'emergencyContact': '',
+          'app_pin': '',
         });
 
-        // Navigate to SetPinScreen
         Get.offAll(() => SetPinScreen());
       }
     } catch (e) {

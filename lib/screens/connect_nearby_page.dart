@@ -6,6 +6,8 @@ import 'package:security/controllers/connect_nearby_controller.dart';
 class ConnectNearbyPage extends StatelessWidget {
   final ConnectNearbyController controller = Get.put(ConnectNearbyController());
 
+  ConnectNearbyPage({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(

@@ -7,6 +7,8 @@ import '../controllers/safespots_controller.dart';
 class SafeSpotsPage extends StatelessWidget {
   final SafespotsController controller = Get.put(SafespotsController());
 
+   SafeSpotsPage({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(

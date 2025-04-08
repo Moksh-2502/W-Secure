@@ -2,11 +2,11 @@ import 'package:get/get.dart';
 import 'package:camera/camera.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:permission_handler/permission_handler.dart'
-    as permissionHandler; // Aliased permission_handler package
+    as permissionHandler; 
 import 'package:geolocator/geolocator.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:location/location.dart'
-    as locationPackage; // Aliased the location package
+    as locationPackage; 
 import 'package:telephony/telephony.dart';
 import '../screens/emergency_lock_screen.dart';
 import 'dart:async';
@@ -160,8 +160,9 @@ class HomeController extends GetxController {
     if (locationPermissionStatus == locationPackage.PermissionStatus.denied) {
       locationPermissionStatus =
           await locationPackage.Location().requestPermission();
-      if (locationPermissionStatus != locationPackage.PermissionStatus.granted)
+      if (locationPermissionStatus != locationPackage.PermissionStatus.granted) {
         return;
+      }
     }
 
     final emergencyContact = await fetchEmergencyContact();

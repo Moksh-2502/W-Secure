@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 import '../controllers/home_controller.dart';
+import '../routes/app_routes.dart';
 import '../widgets/nav_bar.dart';
 import 'alerts_screen.dart';
 
@@ -56,6 +57,10 @@ class HomePage extends GetView<HomeController> {
           _buildButton(
             'Alerts',
             () => Get.to(() => AlertsPage()),
+          ),
+          _buildButton(
+            'Proximity Alerts',
+            () => Get.toNamed(AppRoutes.proximityAlert),
           ),
         ],
       ),

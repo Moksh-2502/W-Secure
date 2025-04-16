@@ -1,0 +1,8 @@
+This directory contains sound files for the application:
+
+1. emergency_siren.mp3 - Used for emergency alerts
+2. alert_sound.mp3 - Used for proximity alerts
+3. notification.mp3 - Used for general notifications
+
+Note: You'll need to add actual sound files with these names for the audio alerts to work.
+Sound files should be in MP3 format and properly licensed for use in your application.

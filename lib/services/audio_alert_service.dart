@@ -3,7 +3,10 @@ import 'package:get/get.dart';
 
 class AudioAlertService extends GetxService {
   final AudioPlayer _audioPlayer = AudioPlayer();
-  final RxBool isSoundEnabled = true.obs;
+  final RxBool _isSoundEnabled = true.obs;
+  
+  // Getter for isSoundEnabled as bool
+  bool get isSoundEnabled => _isSoundEnabled.value;
   
   // Sound types
   static const String EMERGENCY = 'emergency';
@@ -26,7 +29,7 @@ class AudioAlertService extends GetxService {
   /// Play a sound alert based on the specified type
   /// Returns true if sound was played successfully
   Future<bool> playSound(String soundType) async {
-    if (!isSoundEnabled.value) return false;
+    if (!_isSoundEnabled.value) return false;
     
     try {
       if (_soundPaths.containsKey(soundType)) {
@@ -63,15 +66,15 @@ class AudioAlertService extends GetxService {
   
   /// Set sound enabled/disabled
   void setSoundEnabled(bool enabled) {
-    isSoundEnabled.value = enabled;
+    _isSoundEnabled.value = enabled;
     if (!enabled) {
       stopSound();
     }
   }
   
-  /// Toggle sound enabled/disabled
+  /// Toggle sound on/off
   void toggleSound() {
-    setSoundEnabled(!isSoundEnabled.value);
+    _isSoundEnabled.value = !_isSoundEnabled.value;
   }
   
   @override

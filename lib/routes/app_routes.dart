@@ -1,14 +1,14 @@
 import 'package:get/get.dart';
+import 'package:security/binding/alerts_binding.dart';
 import 'package:security/binding/initial_binding.dart';
 import 'package:security/binding/login_binding.dart';
-import 'package:security/binding/proximity_alert_binding.dart';
 import 'package:security/binding/register_binding.dart';
+import 'package:security/screens/alerts_screen.dart';
 import 'package:security/screens/connect_nearby_page.dart';
 import 'package:security/screens/home.dart';
 import 'package:security/screens/login_screen.dart';
 import 'package:security/screens/map_screen.dart';
 import 'package:security/screens/profile_screen.dart';
-import 'package:security/screens/proximity_alert_screen.dart';
 import 'package:security/screens/register.dart';
 import 'package:security/screens/safespots_screen.dart';
 
@@ -22,7 +22,7 @@ class AppRoutes {
   static const String map = '/map';
   static const String profile = '/profile';
   static const String connectNearby = '/connectNearby';
-  static const String proximityAlert = '/proximity-alert';
+  static const String alerts = '/alerts';
 
   static List<GetPage> routes = [
     GetPage(
@@ -54,9 +54,9 @@ class AppRoutes {
       page: () => ConnectNearbyPage(),
     ),
     GetPage(
-      name: proximityAlert,
-      page: () => const ProximityAlertScreen(),
-      binding: ProximityAlertBinding(),
+      name: alerts,
+      page: () => const AlertsPage(),
+      binding: AlertsBinding(),
     ),
   ];
 }

@@ -4,10 +4,7 @@ import 'package:responsive_sizer/responsive_sizer.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:camera/camera.dart';
-<<<<<<< HEAD
-=======
 import 'package:firebase_messaging/firebase_messaging.dart';
->>>>>>> 0e9ef21 (Your commit message)
 import 'package:security/controllers/auth_controller.dart';
 import 'package:security/controllers/home_controller.dart';
 import 'package:security/controllers/login_controller.dart';
@@ -18,19 +15,6 @@ import 'package:security/screens/connect_nearby_page.dart';
 import 'package:security/screens/police_screen.dart';
 import 'package:security/screens/safespots_screen.dart';
 import 'package:security/services/camera_controller_service.dart';
-<<<<<<< HEAD
-
-late List<CameraDescription> cameras;
-
-void main() async {
-  WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp();
-  Get.put(ProfileController());
-  cameras = await availableCameras();
-
-  Get.put<List<CameraDescription>>(cameras);
-
-=======
 import 'package:security/services/notification_service.dart';
 import 'package:security/services/audio_alert_service.dart';
 
@@ -53,18 +37,12 @@ void main() async {
   Get.put(ProfileController());
   cameras = await availableCameras();
   Get.put<List<CameraDescription>>(cameras);
->>>>>>> 0e9ef21 (Your commit message)
   Get.put(NavigationController());
   Get.put(LoginController());
   Get.put(AuthController());
   Get.put(HomeController());
   Get.put(ProfileController());
 
-<<<<<<< HEAD
-  final cameraService = CameraControllerService();
-  await cameraService.initializeCamera(cameras);
-  Get.put<CameraControllerService>(cameraService);
-=======
   // Initialize services
   final cameraService = CameraControllerService();
   await cameraService.initializeCamera(cameras);
@@ -90,7 +68,6 @@ void main() async {
   );
   await notificationService.init();
   Get.put<NotificationService>(notificationService, permanent: true);
->>>>>>> 0e9ef21 (Your commit message)
 
   FirebaseAuth.instance.authStateChanges().listen((User? user) {
     if (user == null) {

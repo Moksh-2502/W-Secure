@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:math' as math;
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 import 'package:security/services/audio_alert_service.dart';
@@ -17,6 +18,8 @@ class ProximityAlertService extends GetxService {
   final RxBool isTracking = false.obs;
   final RxList<Map<String, dynamic>> nearbyAlerts = <Map<String, dynamic>>[].obs;
   final RxBool isProcessingAlert = false.obs;
+  String lastAlertId = '';
+  final Rx<Position?> lastKnownLocation = Rx<Position?>(null);
   
   // Private variables
   Timer? _locationUpdateTimer;
@@ -35,6 +38,132 @@ class ProximityAlertService extends GetxService {
     // Request location permissions when service initializes
     await _requestLocationPermission();
     return this;
+  }
+  
+  // Start tracking location and listening for alerts
+  void startTracking() {
+    if (isTracking.value) return;
+    
+    _startLocationTracking();
+    _setupAlertsListener();
+    isTracking.value = true;
+  }
+  
+  // Start periodic location updates
+  void _startLocationTracking() {
+    _locationUpdateTimer = Timer.periodic(const Duration(seconds: 30), (timer) async {
+      await _updateUserLocation();
+    });
+  }
+  
+  // Setup listener for nearby alerts
+  void _setupAlertsListener() {
+    final user = _auth.currentUser;
+    if (user == null) return;
+    
+    try {
+      // Listen for active alerts within radius
+      _alertsSubscription = _firestore
+          .collection('alerts')
+          .where('isActive', isEqualTo: true)
+          .snapshots()
+          .listen((snapshot) async {
+        // Process alerts
+        await _processNearbyAlerts(snapshot.docs);
+      });
+    } catch (e) {
+      print('Error setting up alerts listener: $e');
+    }
+  }
+  
+  // Stop tracking location
+  void stopTracking() {
+    if (!isTracking.value) return;
+    
+    _locationUpdateTimer?.cancel();
+    _alertsSubscription?.cancel();
+    isTracking.value = false;
+  }
+  
+  // Update user's location in Firestore
+  Future<void> _updateUserLocation() async {
+    final user = _auth.currentUser;
+    if (user == null) return;
+    
+    try {
+      // Get current position with high accuracy
+      Position position = await Geolocator.getCurrentPosition(
+        desiredAccuracy: LocationAccuracy.high,
+      );
+      
+      // Store in Firestore
+      await _firestore.collection('user_locations').doc(user.uid).set({
+        'userId': user.uid,
+        'location': GeoPoint(position.latitude, position.longitude),
+        'lastUpdated': FieldValue.serverTimestamp(),
+        'isActive': true
+      });
+      
+      // Update local tracking
+      lastKnownLocation.value = position;
+    } catch (e) {
+      print('Error updating location: $e');
+    }
+  }
+  
+  // Process nearby alerts from Firestore
+  Future<void> _processNearbyAlerts(List<DocumentSnapshot> alertDocs) async {
+    final user = _auth.currentUser;
+    if (user == null) return;
+    
+    try {
+      Position? currentPosition = lastKnownLocation.value;
+      if (currentPosition == null) {
+        currentPosition = await Geolocator.getCurrentPosition(
+          desiredAccuracy: LocationAccuracy.high,
+        );
+        lastKnownLocation.value = currentPosition;
+      }
+      
+      // Process alerts and calculate distances
+      final List<Map<String, dynamic>> processedAlerts = [];
+      
+      for (var doc in alertDocs) {
+        final data = doc.data() as Map<String, dynamic>?;
+        if (data == null) continue;
+        
+        // Skip user's own alerts
+        if (data['userId'] == user.uid) continue;
+        
+        // Get alert location
+        final GeoPoint? alertLocation = data['location'] as GeoPoint?;
+        if (alertLocation == null) continue;
+        
+        // Calculate distance
+        final double distanceInMeters = _calculateVincentyDistance(
+          currentPosition.latitude, currentPosition.longitude,
+          alertLocation.latitude, alertLocation.longitude
+        );
+        
+        // Convert to kilometers with 1 decimal place
+        final double distanceInKm = double.parse((distanceInMeters / 1000).toStringAsFixed(1));
+        
+        // Add to processed alerts
+        processedAlerts.add({
+          'id': doc.id,
+          ...data,
+          'distance': distanceInKm,
+        });
+      }
+      
+      // Sort by distance (closest first)
+      processedAlerts.sort((a, b) => (a['distance'] as double).compareTo(b['distance'] as double));
+      
+      // Update observable list
+      nearbyAlerts.value = processedAlerts;
+    } catch (e) {
+      print('Error processing nearby alerts: $e');
+    }
   }
   
   // Request location permission
@@ -92,41 +221,6 @@ class ProximityAlertService extends GetxService {
     _locationUpdateTimer?.cancel();
     _alertsSubscription?.cancel();
     isTracking.value = false;
-  }
-  
-  // Update user's location in Firestore
-  Future<void> _updateUserLocation() async {
-    try {
-      final user = _auth.currentUser;
-      if (user == null) return;
-      
-      Position position = await Geolocator.getCurrentPosition(
-        desiredAccuracy: LocationAccuracy.high
-      );
-      
-      // Get user profile data
-      DocumentSnapshot userDoc = await _firestore.collection('users').doc(user.uid).get();
-      String userName = 'Anonymous';
-      String? photoUrl;
-      
-      if (userDoc.exists) {
-        final userData = userDoc.data() as Map<String, dynamic>?;
-        userName = userData?['displayName'] ?? 'Anonymous';
-        photoUrl = userData?['photoURL'];
-      }
-      
-      // Update user location in 'user_locations' collection
-      await _firestore.collection('user_locations').doc(user.uid).set({
-        'userId': user.uid,
-        'userName': userName,
-        'photoUrl': photoUrl,
-        'location': GeoPoint(position.latitude, position.longitude),
-        'lastUpdated': FieldValue.serverTimestamp(),
-        'isActive': true
-      });
-    } catch (e) {
-      print('Error updating location: $e');
-    }
   }
   
   // Listen for alerts from nearby users with enhanced distance calculation

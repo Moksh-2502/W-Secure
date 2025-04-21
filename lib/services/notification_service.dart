@@ -70,10 +70,9 @@ class NotificationService extends GetxService {
       requestAlertPermission: true,
       requestBadgePermission: true,
       requestSoundPermission: true,
-      onDidReceiveLocalNotification: (id, title, body, payload) async {
-        // Handle iOS foreground notification
-      },
     );
+    
+    // Note: onDidReceiveLocalNotification was removed as it's deprecated
     
     // Initialize settings for all platforms
     final InitializationSettings initializationSettings = InitializationSettings(

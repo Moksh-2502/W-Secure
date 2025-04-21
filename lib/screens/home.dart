@@ -55,12 +55,8 @@ class HomePage extends GetView<HomeController> {
                 controller.toggleVideoRecording,
               )),
           _buildButton(
-            'Alerts',
-            () => Get.to(() => AlertsPage()),
-          ),
-          _buildButton(
-            'Proximity Alerts',
-            () => Get.toNamed(AppRoutes.proximityAlert),
+            'Safety Alerts',
+            () => Get.toNamed(AppRoutes.alerts),
           ),
         ],
       ),

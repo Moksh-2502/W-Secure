@@ -73,9 +73,9 @@ We welcome contributions and collaborations from developers, researchers, and se
 
 ## 📫 Contact
 
-- 📧 Email: [youremail@example.com]
-- 🧑‍💻 Developer: [Your Name / Team Name]
-- 🔗 LinkedIn: [Your LinkedIn profile]
+- 📧 Email: [mayanksharma4352@gmail.com]
+- 🧑‍💻 Developer: [Mayank Sharma]
+- 🔗 LinkedIn: [[Your LinkedIn profile](https://www.linkedin.com/in/mayank4352/)]
 
 ---
 
@@ -84,5 +84,3 @@ We welcome contributions and collaborations from developers, researchers, and se
 This project is built with the intention of helping people and enhancing safety. The AI-based surveillance is intended for **authorized and ethical use only** and must comply with local data privacy laws and regulations.
 
 ---
-
-## ⭐️ Star this repo to support women's safety through tech!

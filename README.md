@@ -73,9 +73,9 @@ We welcome contributions and collaborations from developers, researchers, and se
 
 ## 📫 Contact
 
-- 📧 Email: [mayanksharma4352@gmail.com]
-- 🧑‍💻 Developer: [Mayank Sharma]
-- 🔗 LinkedIn: [[Mayank4352](https://www.linkedin.com/in/mayank4352/)]
+- 📧 Email: [mokshmdg40@gmail.com]
+- 🧑‍💻 Developer: [Moksh]
+- 🔗 LinkedIn: [[Moksh](linkedin.com/in/moksh-mehndiratta-a70989297/)]
 
 ---
 
